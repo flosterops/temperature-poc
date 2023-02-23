@@ -1,39 +1,69 @@
-import React, { ReactElement } from "react";
+import React, { ReactElement, useCallback } from "react";
 import { Slider, Box } from "@mui/material";
+import { Mark } from "@mui/base/SliderUnstyled/useSlider.types";
 
-const marks = [
-  {
-    value: 0,
-    label: "0°C",
-  },
+const options: Mark[] = [
   {
     value: 20,
     label: "20°C",
   },
   {
-    value: 37,
-    label: "37°C",
+    value: 25,
+    label: "25°C",
   },
   {
-    value: 100,
-    label: "100°C",
+    value: 30,
+    label: "30°C",
+  },
+  {
+    value: 35,
+    label: "35°C",
+  },
+  {
+    value: 40,
+    label: "40°C",
   },
 ];
 
-function valuetext(value: number) {
-  return `${value}°C`;
+interface IProps {
+  markType?: string;
+  marks?: Mark[];
+  defaultValue?: number;
+  step?: number;
+  min?: number;
+  max?: number;
+  onChange: (value: number) => void;
 }
 
-const TemperatureSlider = (): ReactElement => {
+const TemperatureSlider = ({
+  markType = "°C",
+  marks = options,
+  defaultValue,
+  step,
+  min,
+  max,
+  onChange,
+}: IProps): ReactElement => {
+  const getAriaValueText = (value: number) => `${value}${markType}`;
+  const handleChange = useCallback(
+    (e: any, value: number, activeThumb: number) => {
+      onChange(value);
+    },
+    [onChange]
+  );
+
   return (
     <Box sx={{ width: 300 }}>
       <Slider
         aria-label="Always visible"
-        defaultValue={80}
-        getAriaValueText={valuetext}
-        step={10}
+        defaultValue={20}
+        getAriaValueText={getAriaValueText}
+        step={5}
         marks={marks}
+        min={20}
+        max={40}
         valueLabelDisplay="on"
+        onChange={handleChange as any}
       />
     </Box>
   );
